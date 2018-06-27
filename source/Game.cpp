@@ -196,11 +196,23 @@ void Game::gameLoop()
 			//allow program to run until user closes the window
 			if (e.type == SDL_QUIT)
 				quit = true;
-			if (e.type == SDL_KEYDOWN && gameBall.isMoving == false)
+			if ((e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) && gameBall.isMoving == false)
 			{
+				//launch ball on space button press or mousebutton press
 				switch (e.key.keysym.sym)
 				{
-				case SDLK_SPACE: gameBall.launch();
+				case SDLK_SPACE: 
+					gameBall.launch();
+					printf("Launch ball!\n");
+					break;
+
+				default: break;
+				}
+
+				switch (e.button.state)
+				{
+				case SDL_PRESSED:
+					gameBall.launch();
 					printf("Launch ball!\n");
 					break;
 
