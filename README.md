@@ -1,7 +1,7 @@
 # Breakout
 A prototype Breakout game made with SDL2.0
 
-</tDependencies/>
+Dependencies:
 SDL2-2.07:
 -SDL2.lib
 -SDL2main.lib
