@@ -2,10 +2,9 @@
 A prototype Breakout game made with SDL2.0
 
 Dependencies:
-SDL2-2.07:
--SDL2.lib
--SDL2main.lib
--SDL2_image.lib
--SDL2_ttf.lib
--SDL2_mixer.lib;
-</t>
+\nSDL2-2.07:
+\n-SDL2.lib
+\n-SDL2main.lib
+\n-SDL2_image.lib
+\n-SDL2_ttf.lib
+\n-SDL2_mixer.lib
