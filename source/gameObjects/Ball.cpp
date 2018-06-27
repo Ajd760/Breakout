@@ -174,7 +174,7 @@ SDL_Rect* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
 	}
 
 
-	printf("Block Vector size is %i\n", blocks.size());
+	//printf("Block Vector size is %i\n", blocks.size());
 	//check collision with every block
 	for (int i = 0; i < blocks.size() - 1; i++)
 	{
