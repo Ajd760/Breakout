@@ -2,6 +2,8 @@
 #include "math_header.h"
 //physics functions header file
 
+/* THIS IS NOT USED AND VERY INCOMPLETE AS IS */
+
 float xFinal(float xi, float a, unsigned int ticks)
 {//TODO: static cast result? find a better method
 	float seconds = ticks / 1000; //convert ms to s
