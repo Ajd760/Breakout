@@ -93,7 +93,7 @@ void Paddle::handleEvent(SDL_Event &e)
 	}
 }
 
-//Paddle should only move on the Y-axis (static x axis, make no changes to X)
+//Paddle should only move on the X-axis (static y axis, make no changes to Y)
 void Paddle::move()
 {
 	//move the paddle left/right on the X axis
@@ -130,6 +130,7 @@ bool Paddle::loadTexture(std::string path, SDL_Renderer* cRender)
 	return mPaddleTexture.loadFromFile(path, cRender);
 }
 
+//For automated testing with an AI paddle controller
 void Paddle::moveAI(int ballPosX)
 {
 	//move the paddle left/right on the X axis
