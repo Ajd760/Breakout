@@ -1,5 +1,6 @@
 #include "Game.h"
 
+//TODO: Move block spawning and rendering into their own class
 
 Game::Game()
 {
