@@ -4,7 +4,7 @@
 
 Ball::Ball() : MASS(0.1f)
 {
-	ballPos_X = ballPos_Y = 0;
+	ballPos_X = ballPos_Y = ballVelocity_X = ballVelocity_Y  = 0;
 	ballCollider.x = ballCollider.y = 0;
 	ballCollider.r = BALL_RADIUS;
 
@@ -22,7 +22,7 @@ Ball::Ball() : MASS(0.1f)
 
 Ball::Ball(float m) : MASS(m)
 {
-	ballPos_X = ballPos_Y = 0;
+	ballPos_X = ballPos_Y = ballVelocity_X = ballVelocity_Y = 0;
 	ballCollider.x = ballCollider.y = 0;
 	ballCollider.r = BALL_RADIUS;
 
@@ -84,23 +84,48 @@ void Ball::move(std::vector<Block>& blocks, Paddle* paddle)
 		col = detectCollision(blocks, paddle);
 		if (col != NULL)
 		{
-			//NEED TO FIND A MORE ELEGANT SOLUTION THAN HARDCODING THIS!!!
+			//NEED TO FIND A MORE ELEGANT SOLUTION THAN HARDCODING THESE paddle collider indices
 			if (col == paddle->getCollider(0)) //left side of paddle
 			{
-				printf("collided with left side of paddle\n");
+				printf("collided with far far left side of paddle\n");
 				ballVelocity_Y *= -1;
-				ballVelocity_X = -5;
+				ballVelocity_X = -7;
 			}
-			else if (col == paddle->getCollider(1)) //middle of paddle
+			else if (col == paddle->getCollider(1))
 			{
-				printf("collided with middle of paddle\n");
+				printf("collided with far left side of paddle\n");
 				ballVelocity_Y *= -1;
+				ballVelocity_X = -4;
 			}
 			else if (col == paddle->getCollider(2))
 			{
+				printf("collided with left side of paddle\n");
+				ballVelocity_Y *= -1;
+				ballVelocity_X = -2;
+			}
+			else if (col == paddle->getCollider(3))
+			{
+				printf("collided with middle of paddle\n");
+				ballVelocity_Y *= -1;
+				ballVelocity_X = 0;
+			}
+			else if (col == paddle->getCollider(4))
+			{
 				printf("collided with right side of paddle\n");
 				ballVelocity_Y *= -1;
-				ballVelocity_X = 5;
+				ballVelocity_X = 2;
+			}
+			else if (col == paddle->getCollider(5))
+			{
+				printf("collided with far right side of paddle\n");
+				ballVelocity_Y *= -1;
+				ballVelocity_X = 4;
+			}
+			else if (col == paddle->getCollider(6))
+			{
+				printf("collided with far far right side of paddle\n");
+				ballVelocity_Y *= -1;
+				ballVelocity_X = 7;
 			}
 			else //else collided with a block
 			{
@@ -126,6 +151,8 @@ void Ball::move(std::vector<Block>& blocks, Paddle* paddle)
 
 void Ball::reset(Paddle* paddle)
 {
+	//printf("ball reset to paddle\n");
+
 	ballVelocity_X = 0;
 	ballVelocity_Y = 0;
 
@@ -208,7 +235,7 @@ SDL_Rect* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
 	return NULL;
 }
 
-double Ball::distanceSquared(int x1, int y1, int x2, int y2)
+int Ball::distanceSquared(int x1, int y1, int x2, int y2)
 {
 	int deltaX = x2 - x1;
 	int deltaY = y2 - y1;

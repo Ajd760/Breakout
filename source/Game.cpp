@@ -173,7 +173,8 @@ void Game::gameLoop()
 	SDL_Event e; //event handler
 
 	//Pregame object spawning
-	Paddle gamePaddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30); //spawn paddle at the center middle of screen
+	bool paddleCollidersAuto = false; //if set to true, this sets all paddle colliders to the same width
+	Paddle gamePaddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, paddleCollidersAuto, 10); //spawn paddle at the center middle of screen
 	Ball gameBall;
 	gameBall.reset(&gamePaddle); //immediately reset ball back to paddle after spawn
 	spawnBlocks(250, 200, 5, 5); //setting a 5x5 stack of blocks

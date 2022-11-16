@@ -81,7 +81,8 @@
     <LibraryPath>C:\sdl_libs\SDL2_mixer-2.6.2\lib\x64;C:\sdl_libs\SDL2_ttf-2.20.1\lib\x64;C:\sdl_libs\SDL2_image-2.6.2\lib\x64;C:\sdl_libs\SDL2-2.24.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\sdl_libs\SDL2-2.24.2\include</IncludePath>
+    <IncludePath>C:\sdl_libs\SDL2_mixer-2.6.2\include;C:\sdl_libs\SDL2_ttf-2.20.1\include;C:\sdl_libs\SDL2_image-2.6.2\include;C:\sdl_libs\SDL2-2.24.2\include</IncludePath>
+    <LibraryPath>C:\sdl_libs\SDL2_mixer-2.6.2\lib\x64;C:\sdl_libs\SDL2_ttf-2.20.1\lib\x64;C:\sdl_libs\SDL2_image-2.6.2\lib\x64;C:\sdl_libs\SDL2-2.24.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,6 +132,8 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

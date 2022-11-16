@@ -2,25 +2,76 @@
 
 //Paddle implementation file
 
-Paddle::Paddle(int x, int y)
+Paddle::Paddle(int x, int y, bool setCollidersAuto, unsigned int middleWidth)
 {
 	mPosX = x; mPosY = y; //set paddle starting position
 
-	//set collider starting dimensions
-	for (int i = 0; i < PADDLE_HITBOXES; i++)
+	if (setCollidersAuto) //set paddle hitboxes programmatically
 	{
-		mPaddleCollider[i].w = PADDLE_WIDTH / PADDLE_HITBOXES; //width of each based on # of hit zones
-		mPaddleCollider[i].h = PADDLE_HEIGHT; //height always the same
-
-		if (i == 0) //first collider (left one) starts at left edge of paddle position
-		{	
-			mPaddleCollider[i].x = mPosX;
-			mPaddleCollider[i].y = mPosY;
-		}
-		else //subsequent paddle boxes start at the right edge of the previous paddle
+		for (int i = 0; i < PADDLE_HITBOXES; i++)
 		{
-			mPaddleCollider[i].x = mPaddleCollider[i-1].x + mPaddleCollider[i-1].w;
-			mPaddleCollider[i].y = mPosY; //y posistion is static always
+			mPaddleCollider[i].w = PADDLE_WIDTH / PADDLE_HITBOXES; //width of each based on # of hit zones
+			mPaddleCollider[i].h = PADDLE_HEIGHT; //height always the same
+
+			if (i == 0) //first collider (left one) starts at left edge of paddle position1
+			{	
+				mPaddleCollider[i].x = mPosX;
+				mPaddleCollider[i].y = mPosY;
+			}
+			else //subsequent paddle boxes start at the right edge of the previous paddle
+			{
+				mPaddleCollider[i].x = mPaddleCollider[i-1].x + mPaddleCollider[i-1].w;
+				mPaddleCollider[i].y = mPosY; //y posistion is static always
+			}
+		}
+	}
+	else //set paddle hitboxes manually like a super dork
+	{
+		unsigned int middleHitBoxIndex;
+
+		if (PADDLE_HITBOXES % 2 == 1) //odd number of hitboxes
+		{
+			// indices go from 0 to PADDLE_HITBOXES
+			middleHitBoxIndex = (PADDLE_HITBOXES / 2);
+
+		}
+		else //even number of hitboxes
+		{
+			// TODO: either implement this or create a workaround for even hitboxes
+			printf("paddle hitboxes set to an even value, don't do this you animal\n");
+			unsigned int middleHitBoxLeft = (PADDLE_HITBOXES / 2) - 1;
+			unsigned int middleHitBoxRight = (PADDLE_HITBOXES / 2);
+		}
+
+		// set the non-middle widths to be the same widths
+		unsigned int sideWidths = (PADDLE_WIDTH - middleWidth) / (PADDLE_HITBOXES - 1); // remaining width minus the middle width divided by the number of non-middle sections
+
+		//Make all non-middle hitboxes equal widths
+		for (int i = 0; i < PADDLE_HITBOXES; i++)
+		{
+			if (i == middleHitBoxIndex)
+			{
+				//Set the dimensions of the middle hit collider
+				mPaddleCollider[middleHitBoxIndex].w = middleWidth;
+				mPaddleCollider[middleHitBoxIndex].h = PADDLE_HEIGHT;
+			}
+			else
+			{
+				mPaddleCollider[i].w = sideWidths;
+				mPaddleCollider[i].h = PADDLE_HEIGHT; //height always the same on a basic paddle
+
+				if (i == 0) //first collider (left one) starts at left edge of paddle position1
+				{
+					mPaddleCollider[i].x = mPosX;
+					mPaddleCollider[i].y = mPosY;
+				}
+				else //subsequent paddle boxes start at the right edge of the previous paddle
+				{
+					mPaddleCollider[i].x = mPaddleCollider[i - 1].x + mPaddleCollider[i - 1].w;
+					mPaddleCollider[i].y = mPosY; //y posistion is static always
+
+				}
+			}
 
 		}
 	}

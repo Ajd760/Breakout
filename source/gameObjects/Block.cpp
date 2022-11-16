@@ -4,11 +4,13 @@
 
 Block::Block()
 {
+	x = 0;
+	y = 0;
 	blockCollider.w = 0;
 	blockCollider.h = 0;
 }
 
-Block::Block(int X, int Y) //why dose the program crash when i set the block collider dimensions???
+Block::Block(int X, int Y) //why does the program crash when i set the block collider dimensions???
 {
 	x = X;
 	y = Y;

@@ -29,8 +29,7 @@ public:
 	const float MASS;
 
 	int ballPos_X, ballPos_Y;
-	int ballVelocity_X;
-	int ballVelocity_Y;
+	int ballVelocity_X, ballVelocity_Y;
 	bool isMoving;
 
 	Ball();
@@ -44,7 +43,7 @@ public:
 	void reset(Paddle* paddle);
 	float colllisionAngle(SDL_Rect* col);
 	SDL_Rect* detectCollision(std::vector<Block>& blocks, Paddle* paddle);
-	double distanceSquared(int x1, int y1, int x2, int y2);
+	int distanceSquared(int x1, int y1, int x2, int y2);
 	CircleCollider* getCollider();
 	SoundPlayer soundPlayer;
 };
