@@ -130,7 +130,7 @@ void Game::spawnBlocks(int x, int y, int width, int height)
 			Block toAdd(newX, y);
 			blocks.push_back(toAdd); //add block to the vector
 			columnCount++;
-			LOG("Added %i block...\n", columnCount);
+			LOG("Added block with blockID %i\n", toAdd.blockID);
 			newX = newX + blocks[0].getBlockWidth(); //move the x coordinate to the right
 		}
 
@@ -142,6 +142,7 @@ void Game::spawnBlocks(int x, int y, int width, int height)
 	{
 		blocks[i].loadTexture("red_block.png", mainRender);
 	}
+
 }
 
 //renders blocks to screen (call every frame)
@@ -177,7 +178,7 @@ void Game::gameLoop()
 	Paddle gamePaddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, paddleCollidersAuto, 10); //spawn paddle at the center middle of screen
 	Ball gameBall;
 	gameBall.reset(&gamePaddle); //immediately reset ball back to paddle after spawn
-	spawnBlocks(250, 200, 5, 5); //setting a 5x5 stack of blocks
+	spawnBlocks(250, 200, 7, 7); //setting a 5x5 stack of blocks
 
 	//pregame object texture loading
 	loadAllTextures(&gameBall, &gamePaddle); //load all textures for objects
@@ -221,7 +222,7 @@ void Game::gameLoop()
 				default: break;
 				}
 			}
-			//currently uses mouse movement to control paddle
+			//currently uses mouse movement or arrows to control paddle
 			gamePaddle.handleEvent(e);
 		}
 

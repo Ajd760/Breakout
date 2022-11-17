@@ -70,7 +70,8 @@ void Ball::move(std::vector<Block>& blocks, Paddle* paddle)
 	}
 	else
 	{
-		SDL_Rect* col = NULL; //holds any item collided with
+		
+		CollisionEvent* colEvent = nullptr; //holds any item collided with
 	
 		//move the ball
 		ballPos_X += ballVelocity_X;
@@ -81,47 +82,48 @@ void Ball::move(std::vector<Block>& blocks, Paddle* paddle)
 		ballRay.originY = ballCollider.y;
 
 		//check for collisions with blocks and paddle
-		col = detectCollision(blocks, paddle);
-		if (col != NULL)
+		colEvent = detectCollision(blocks, paddle);
+
+		if (colEvent != nullptr && colEvent->collider != nullptr) //there was a collision
 		{
 			//NEED TO FIND A MORE ELEGANT SOLUTION THAN HARDCODING THESE paddle collider indices
-			if (col == paddle->getCollider(0)) //left side of paddle
+			if (colEvent->collider == paddle->getCollider(0)) //left side of paddle
 			{
 				printf("collided with far far left side of paddle\n");
 				ballVelocity_Y *= -1;
 				ballVelocity_X = -7;
 			}
-			else if (col == paddle->getCollider(1))
+			else if (colEvent->collider == paddle->getCollider(1))
 			{
 				printf("collided with far left side of paddle\n");
 				ballVelocity_Y *= -1;
 				ballVelocity_X = -4;
 			}
-			else if (col == paddle->getCollider(2))
+			else if (colEvent->collider == paddle->getCollider(2))
 			{
 				printf("collided with left side of paddle\n");
 				ballVelocity_Y *= -1;
 				ballVelocity_X = -2;
 			}
-			else if (col == paddle->getCollider(3))
+			else if (colEvent->collider == paddle->getCollider(3))
 			{
 				printf("collided with middle of paddle\n");
 				ballVelocity_Y *= -1;
 				ballVelocity_X = 0;
 			}
-			else if (col == paddle->getCollider(4))
+			else if (colEvent->collider == paddle->getCollider(4))
 			{
 				printf("collided with right side of paddle\n");
 				ballVelocity_Y *= -1;
 				ballVelocity_X = 2;
 			}
-			else if (col == paddle->getCollider(5))
+			else if (colEvent->collider == paddle->getCollider(5))
 			{
 				printf("collided with far right side of paddle\n");
 				ballVelocity_Y *= -1;
 				ballVelocity_X = 4;
 			}
-			else if (col == paddle->getCollider(6))
+			else if (colEvent->collider == paddle->getCollider(6))
 			{
 				printf("collided with far far right side of paddle\n");
 				ballVelocity_Y *= -1;
@@ -129,14 +131,14 @@ void Ball::move(std::vector<Block>& blocks, Paddle* paddle)
 			}
 			else //else collided with a block
 			{
-				//col points to the specific block that was hit (should)
-				printf("collided with a block\n");
+				//colEvent->block and colEvent->collider point to the specific block that was hit (should)
+				printf("collided with a block - blockID %i\n", colEvent->block->blockID);
 				ballVelocity_Y *= -1;
 				soundPlayer.hitBlock();
 			}
 			soundPlayer.hitPaddle();
 		}
-
+		
 		//check for collision with edges
 		if (ballCollider.x - ballRay.length < 0)
 			ballVelocity_X = 4;
@@ -170,16 +172,20 @@ void Ball::reset(Paddle* paddle)
 
 
 //checks for collisions with blocks and paddle, returns a pointer to the object collided with so it can be handled in move()
-SDL_Rect* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
+CollisionEvent* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
 {
 	int cX, cY; //closest points on paddle/block
 
-	//check paddle collision:
-
+	// initialize the return value
+	CollisionEvent* colEvent = new CollisionEvent;
+	colEvent->block = nullptr; 
+	colEvent->paddle = nullptr;
+	colEvent->collider = nullptr;
+	
+	//check for paddle collision:
 	for (int i = 0; i < paddle->PADDLE_HITBOXES; i++)
 	{
-
-		//get x coord
+		//get closest x coord
 		if (ballCollider.x < paddle->mPaddleCollider[i].x) //if closest x point is on left side of paddle (i.e. ball center is to the left of paddle)
 			cX = paddle->mPaddleCollider[i].x;
 		else if (ballCollider.x > paddle->mPaddleCollider[i].x + paddle->mPaddleCollider[i].w) //else if closest x point is on right side of paddle
@@ -187,7 +193,7 @@ SDL_Rect* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
 		else //else closest x point is wherever the circle's x point is (it's within the paddle's x range)
 			cX = ballCollider.x;
 	
-		//get y coord - same idea as x (no iteration here, y position is static for EVERY hitbox)
+		//get closest y coord - same idea as x (no iteration here, y position is static for EVERY hitbox except the ball's)
 		if (ballCollider.y < paddle->mPosY)
 			cY = paddle->mPosY;
 		else if (ballCollider.y > paddle->mPosY + paddle->PADDLE_HEIGHT)
@@ -195,12 +201,18 @@ SDL_Rect* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
 		else
 			cY = ballCollider.y;
 
+		
 		//check distance and return paddle collider if a collision occured
-		if (distanceSquared(ballCollider.x, ballCollider.y, cX, cY) < ballCollider.r*ballCollider.r) //if the distance squared between the circle center and the closest point on the paddle is less than the ball radius squared
-			return paddle->getCollider(i);
+		if (distanceSquared(ballCollider.x, ballCollider.y, cX, cY) < ballCollider.r * ballCollider.r) //if the distance squared between the circle center and the closest point on the paddle is less than the ball radius squared
+		{
+			colEvent->block = NULL;
+			colEvent->paddle = paddle;
+			colEvent->collider = paddle->getCollider(i);
+			return colEvent;
+		}
 	}
 
-
+	
 	//printf("Block Vector size is %i\n", blocks.size());
 	//check collision with every block
 	for (int i = 0; i < blocks.size() - 1; i++)
@@ -222,17 +234,26 @@ SDL_Rect* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle)
 			cY = ballCollider.y;
 
 		//check distance and return block collider if a collision occured. Also destroy block and remove from vector
-		if (distanceSquared(ballCollider.x, ballCollider.y, cX, cY) < ballCollider.r*ballCollider.r)
+		if (distanceSquared(ballCollider.x, ballCollider.y, cX, cY) < ballCollider.r*ballCollider.r) 
 		{
-			Block destroyed = blocks[i]; //copy the block
+			colEvent->block = &blocks[i];
+			colEvent->collider = colEvent->block->getBlockCollider();
+			colEvent->paddle = paddle;
 			blocks[i].destroy(); //free texture
-			blocks.erase(blocks.cbegin() + i); //not quite working as intended... supposed to erase from vector, BUT also removes last block (visually) in vector
-			return destroyed.getBlockCollider(); //return the copied collider location iot remove it from the rendering loop
+			//blocks.erase(blocks.begin() + i); //remove the block from the level
+			return colEvent;
+
+
+			// Old broken/buggy way
+			//Block destroyed = blocks[i]; //copy the block
+			//blocks[i].destroy(); //free texture
+			//blocks.erase(blocks.cbegin() + i); //not quite working as intended... supposed to erase from vector, BUT also removes last block (visually) in vector
+			//return destroyed.getBlockCollider(); //return the copied collider location iot remove it from the rendering loop
 		}
 	}
 
 	//if no collisions detected, return null
-	return NULL;
+	return colEvent;
 }
 
 int Ball::distanceSquared(int x1, int y1, int x2, int y2)

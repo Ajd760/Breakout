@@ -17,6 +17,14 @@ struct RayCast2D
 	int length; //ray length to be fixed at circle radius + ball speed
 };
 
+struct CollisionEvent
+{
+	SDL_Rect* collider;
+	Block* block;
+	Paddle* paddle;
+
+};
+
 class Ball
 {
 public:
@@ -35,14 +43,13 @@ public:
 	Ball();
 	Ball(float m); //init mass
 	~Ball();
-
 	bool loadTexture(std::string path, SDL_Renderer* renderer);
 	void render(SDL_Renderer* renderer);
 	void launch();
 	void move(std::vector<Block>& blocks, Paddle* paddle);
 	void reset(Paddle* paddle);
 	float colllisionAngle(SDL_Rect* col);
-	SDL_Rect* detectCollision(std::vector<Block>& blocks, Paddle* paddle);
+	CollisionEvent* detectCollision(std::vector<Block>& blocks, Paddle* paddle);
 	int distanceSquared(int x1, int y1, int x2, int y2);
 	CircleCollider* getCollider();
 	SoundPlayer soundPlayer;
