@@ -10,6 +10,8 @@ class GameObjectManager;
 class GameObject
 {
 public:
+	std::string name;
+
 	GameObject(GameObjectManager& manager);
 	GameObject(GameObjectManager& manager, std::string name);
 	~GameObject();
@@ -19,8 +21,6 @@ public:
 	bool getIsActive() const;
 	int getNumComponents() const;
 	Component* getComponentByIndex(int index) const;
-
-	std::string name;
 
 	template <typename T, typename... TArgs>
 	T& addComponent(TArgs&&... args) 

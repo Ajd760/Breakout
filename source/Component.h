@@ -11,6 +11,7 @@ class Component
 {
 public:
 	GameObject* owner;
+
 	virtual ~Component();
 	virtual void init();
 	virtual void update(float deltaTime);

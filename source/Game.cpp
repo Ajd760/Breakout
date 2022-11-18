@@ -10,7 +10,6 @@ Game::Game()
 	//level = 0;
 }
 
-
 Game::~Game()
 {
 	close();

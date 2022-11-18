@@ -22,13 +22,6 @@
 class Game
 {
 public:
-	//constants and statics
-	static const int BLOCK_QTY = 20;
-	static const int WINDOW_WIDTH = 800;
-	static const int WINDOW_HEIGHT = 600;
-//	static int level; //starts at 0
-
-
 	//variables/objects:
 	SDL_Window* gameWindow;
 	SDL_Surface* windowSurface;
@@ -41,9 +34,8 @@ public:
 	//functions:
 	Game();
 	~Game();
-
-	//core game functions: //
 	bool init(); //start
+	bool isRunning() const;
 	void gameLoop(); //play
 	void close(); //game over
 	/////////////////////////

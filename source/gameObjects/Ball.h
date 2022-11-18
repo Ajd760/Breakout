@@ -33,14 +33,13 @@ public:
 	LTexture ballTexture;
 	CircleCollider ballCollider;
 	RayCast2D ballRay;
-
 	static const int BALL_RADIUS = 6;
 	static const int BALL_SPEED = -10; 
 	const float MASS;
-
 	int ballPos_X, ballPos_Y;
 	int ballVelocity_X, ballVelocity_Y;
 	bool isMoving;
+	SoundPlayer soundPlayer;
 
 	Ball();
 	Ball(float m); //init mass
@@ -54,5 +53,4 @@ public:
 	CollisionEvent* detectCollision(std::vector<Block>& blocks, Paddle* paddle);
 	int distanceSquared(int x1, int y1, int x2, int y2);
 	CircleCollider* getCollider();
-	SoundPlayer soundPlayer;
 };

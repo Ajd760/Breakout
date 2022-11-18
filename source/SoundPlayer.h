@@ -12,7 +12,6 @@ public:
 	SoundPlayer();
 	~SoundPlayer();
 
-
 	Mix_Chunk* ballLaunch;
 	Mix_Chunk* ballHitPaddle;
 	Mix_Chunk* ballHitBlock1;
