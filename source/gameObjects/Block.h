@@ -1,5 +1,6 @@
 #pragma once
 #include "../graphics/LTexture.h"
+#include "../Constants.h"
 
 static unsigned int Block_Counter = 0;
 

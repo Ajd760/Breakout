@@ -6,6 +6,8 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+
+#include "Constants.h"
 #include "LTimer.h"
 #include "gameObjects/Block.h"
 #include "gameObjects/Paddle.h"
@@ -13,8 +15,9 @@
 
 #define LOG printf
 
-const int SCREEN_FPS = 60;
-const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
+// moved to Constants.h
+//const int SCREEN_FPS = 60;
+//const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 class Game
 {

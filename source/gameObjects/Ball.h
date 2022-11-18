@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+
+#include "../Constants.h"
 #include "../graphics/LTexture.h"
 #include "Paddle.h"
 #include "Block.h"

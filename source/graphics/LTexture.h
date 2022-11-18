@@ -4,10 +4,9 @@
 #include <SDL_ttf.h>
 #include <string>
 
-//window size included here as this is the lowest included class
-// there has to be a better way to do this...
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+// moved to Constants.h
+//const int WINDOW_WIDTH = 800;
+//const int WINDOW_HEIGHT = 600;
 
 //Texture wrapper class
 class LTexture

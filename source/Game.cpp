@@ -1,7 +1,5 @@
 #include "Game.h"
 
-//TODO: Move block spawning and rendering into their own class
-
 Game::Game()
 {
 	gameWindow = NULL;
@@ -229,7 +227,7 @@ void Game::gameLoop()
 		gamePaddle.move();
 		gameBall.move(blocks, &gamePaddle);
 
-		//is this necessary? no
+		//is this necessary? no but leave for reference
 		//SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 0xff); //black background
 		//SDL_RenderClear(mainRender);
 
