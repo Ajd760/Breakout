@@ -240,9 +240,8 @@ CollisionEvent* Ball::detectCollision(std::vector<Block>& blocks, Paddle* paddle
 			colEvent->collider = colEvent->block->getBlockCollider();
 			colEvent->paddle = paddle;
 			blocks[i].destroy(); //free texture
-			//blocks.erase(blocks.begin() + i); //remove the block from the level
+			blocks.erase(blocks.begin() + i); //remove the block from the level
 			return colEvent;
-
 
 			// Old broken/buggy way
 			//Block destroyed = blocks[i]; //copy the block
