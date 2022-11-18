@@ -6,8 +6,6 @@ Game::Game()
 	windowSurface = NULL;
 	mainRender = NULL;
 	font = NULL;
-	
-	//level = 0;
 }
 
 Game::~Game()
@@ -259,9 +257,4 @@ void Game::gameLoop()
 	}
 
 	LOG("BYE, Felicia\n"); //program ended
-}
-
-void removeBlock(std::vector<Block>& blocks)
-{
-
 }

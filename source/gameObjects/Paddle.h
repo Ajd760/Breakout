@@ -8,7 +8,7 @@ public:
 	static const int PADDLE_WIDTH = 90;
 	static const int PADDLE_HEIGHT = 20;
 	static const int PADDLE_HITBOXES = 7;
-	static const int PADDLE_SPEED = 10; //pixles per frame
+	static const int PADDLE_SPEED = 10; //pixels per frame
 	static const int PADDLE_SPEED_MOUSE = 20;
 	LTexture mPaddleTexture;
 	int mPosX, mPosY;
