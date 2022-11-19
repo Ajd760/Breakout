@@ -137,6 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\GameObjectManager.cpp" />
+    <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\gameObjects\Ball.cpp" />
     <ClCompile Include="source\gameObjects\Block.cpp" />
     <ClCompile Include="source\Game.cpp" />
@@ -148,6 +150,10 @@
     <ClCompile Include="source\SoundPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Constants.h" />
+    <ClInclude Include="source\GameObjectManager.h" />
+    <ClInclude Include="source\GameObject.h" />
+    <ClInclude Include="source\Component.h" />
     <ClInclude Include="source\gameObjects\Ball.h" />
     <ClInclude Include="source\gameObjects\Block.h" />
     <ClInclude Include="source\Game.h" />

@@ -22,7 +22,7 @@
 class Game
 {
 public:
-	static SDL_Renderer* mainRender;
+	SDL_Renderer* mainRender;
 	TTF_Font* font;
 	LTexture backgroundTexture; 
 	LTimer* timer;

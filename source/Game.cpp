@@ -2,21 +2,18 @@
 
 Game::Game()
 {
-	gameWindow = NULL;
-	windowSurface = NULL;
-	mainRender = NULL;
-	font = NULL;
+	gameWindow = nullptr;
+	windowSurface = nullptr;
+	mainRender = nullptr;
+	font = nullptr;
+	timer = nullptr;
+	bisRunning = false;
+	lastFrameTicks = 0;
 }
 
 Game::~Game()
 {
 	close();
-
-	//reassert NULL on all local pointers
-	gameWindow = NULL;
-	windowSurface = NULL;
-	mainRender = NULL;
-	font = NULL;
 }
 
 //Initializes SDL subsystems. Currently Initializing:
@@ -98,10 +95,10 @@ void Game::close()
 	SDL_DestroyWindow(gameWindow);
 	TTF_CloseFont(font);
 
-	gameWindow = NULL;
-	windowSurface = NULL;
-	mainRender = NULL;
-	font = NULL;
+	gameWindow = nullptr;
+	windowSurface = nullptr;
+	mainRender = nullptr;
+	font = nullptr;
 
 	Mix_Quit();
 	TTF_Quit();

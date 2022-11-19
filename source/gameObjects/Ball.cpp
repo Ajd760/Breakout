@@ -86,7 +86,10 @@ void Ball::move(std::vector<Block>& blocks, Paddle* paddle)
 
 		if (colEvent != nullptr && colEvent->collider != nullptr) //there was a collision
 		{
-			//NEED TO FIND A MORE ELEGANT SOLUTION THAN HARDCODING THESE paddle collider indices
+			//TODO: create an alternative algorithm for ball rebound speed off the paddle 
+			//      that is based on the distnace from the center of the paddle where the 
+			//		collision occurred.
+			//		Also add some randomness/variance to each collision (+/- 0.0-0.2 or so speed)
 			if (colEvent->collider == paddle->getCollider(0)) //left side of paddle
 			{
 				printf("collided with far far left side of paddle\n");
