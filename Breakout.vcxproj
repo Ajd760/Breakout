@@ -154,7 +154,7 @@
     <ClInclude Include="source\Constants.h" />
     <ClInclude Include="source\GameObjectManager.h" />
     <ClInclude Include="source\GameObject.h" />
-    <ClInclude Include="source\Component.h" />
+    <ClInclude Include="source\components\Component.h" />
     <ClInclude Include="source\gameObjects\Ball.h" />
     <ClInclude Include="source\gameObjects\Block.h" />
     <ClInclude Include="source\Game.h" />

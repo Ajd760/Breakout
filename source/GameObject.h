@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-#include "Component.h"
+#include "components/Component.h"
 
 class GameObjectManager;
 
