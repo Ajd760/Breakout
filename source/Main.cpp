@@ -12,19 +12,20 @@
 
 int main(int argc, char* args[])
 {
-	Game newGame; //game instance
+	Game* newGame = new Game(); //game instance
 
-	if (!newGame.init()) //if game fails to load
+	if (!newGame->init()) //if game fails to load
 	{
 		LOG("Failed to initialize game! Closing...\n");
 	}
 	else //game loaded, begin play
 	{
 		LOG("About to enter game loop...\n");
-		newGame.gameLoop();
+		newGame->gameLoop();
 	}
 
-	newGame.close(); //cleanup
+	newGame->close(); //cleanup
+	delete newGame;
 
 	return 0;
 }

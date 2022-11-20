@@ -6,7 +6,10 @@ Game::Game()
 	windowSurface = nullptr;
 	mainRender = nullptr;
 	font = nullptr;
-	timer = nullptr;
+
+	timer = new LTimer;
+	manager = new GameObjectManager;
+
 	bisRunning = false;
 	lastFrameTicks = 0;
 }
@@ -14,6 +17,16 @@ Game::Game()
 Game::~Game()
 {
 	close();
+
+	manager->destroyEverything();
+
+	gameWindow = nullptr;
+	windowSurface = nullptr;
+	mainRender = nullptr;
+	font = nullptr;
+
+	delete timer;
+	delete manager;
 }
 
 //Initializes SDL subsystems. Currently Initializing:
@@ -84,21 +97,17 @@ bool Game::init()
 			}
 		}
 	}
+	bisRunning = true;
 	return success;
 }
 
-//Closes and cleans up all SDL/IMG/TTF/MIX processes
+//Closes and cleans up all SDL/IMG/TTF/MIX data
 void Game::close()
 {
 	SDL_FreeSurface(windowSurface);
 	SDL_DestroyRenderer(mainRender);
 	SDL_DestroyWindow(gameWindow);
 	TTF_CloseFont(font);
-
-	gameWindow = nullptr;
-	windowSurface = nullptr;
-	mainRender = nullptr;
-	font = nullptr;
 
 	Mix_Quit();
 	TTF_Quit();
@@ -137,115 +146,39 @@ void Game::spawnBlocks(int x, int y, int width, int height)
 
 }
 
-//renders blocks to screen (call every frame)
-void Game::renderBlocks()
-{
-	for (unsigned int i = 0; i < blocks.size(); i++)
-	{
-		blocks[i].render(mainRender);
-	}
-
-}
-
 void Game::loadAllTextures(Ball* ball, Paddle* paddle)
 {
 	ball->loadTexture("ball.png", mainRender);
 	paddle->loadTexture("space_paddle90px.png", mainRender);
-
-	//for (unsigned int i = 0; i < blocks.size(); i++)
-	//{
-	//	blocks[i].loadTexture("red_block.png", mainRender);
-	//}
 }
 
 void Game::gameLoop()
 {
-	LOG("Everything up and running, cap.\n");
-
-	bool quit = false; //quit flag
 	SDL_Event e; //event handler
 
 	//Pregame object spawning
 	bool paddleCollidersAuto = false; //if set to true, this sets all paddle colliders to the same width
-	Paddle gamePaddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, paddleCollidersAuto, 10); //spawn paddle at the center middle of screen
-	Ball gameBall;
-	gameBall.reset(&gamePaddle); //immediately reset ball back to paddle after spawn
+	Paddle* gamePaddle = new Paddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, paddleCollidersAuto, 10); //spawn paddle at the center middle of screen
+	Ball* gameBall = new Ball();
+	gameBall->reset(gamePaddle); //immediately reset ball back to paddle after spawn
 	spawnBlocks(250, 200, 7, 7); //setting a 5x5 stack of blocks
 
 	//pregame object texture loading
-	loadAllTextures(&gameBall, &gamePaddle); //load all textures for objects
+	loadAllTextures(gameBall, gamePaddle); //load all textures for objects
 
 	//load background texture
 	if (!(backgroundTexture.loadFromFile("background.png", mainRender)))
 	{
 		LOG("Failed to load background texture... Aborting startup\n");
-		quit = true;
+		bisRunning = false;
 	}
 
 	//main game loop
-	while (!quit)
+	while (bisRunning)
 	{
-		//user input loop
-		while (SDL_PollEvent(&e) != 0)
-		{
-			//allow program to run until user closes the window
-			if (e.type == SDL_QUIT)
-				quit = true;
-			if ((e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) && gameBall.isMoving == false)
-			{
-				//launch ball on space button press or mousebutton press
-				switch (e.key.keysym.sym)
-				{
-				case SDLK_SPACE: 
-					gameBall.launch();
-					printf("Launch ball!\n");
-					break;
-
-				default: break;
-				}
-
-				switch (e.button.state)
-				{
-				case SDL_PRESSED:
-					gameBall.launch();
-					printf("Launch ball!\n");
-					break;
-
-				default: break;
-				}
-			}
-			//currently uses mouse movement or arrows to control paddle
-			gamePaddle.handleEvent(e);
-		}
-
-		gamePaddle.move();
-		gameBall.move(blocks, &gamePaddle);
-
-		//is this necessary? no but leave for reference
-		//SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 0xff); //black background
-		//SDL_RenderClear(mainRender);
-
-		//render background
-		backgroundTexture.render(0, 0, mainRender);
-
-		//render paddle and ball
-		gamePaddle.render(mainRender);
-		gameBall.render(mainRender);
-
-		//raycast line visualization debugging
-		SDL_SetRenderDrawColor(mainRender, 255, 255, 255, 0xff);
-		SDL_RenderDrawLine(mainRender, gameBall.ballRay.originX, gameBall.ballRay.originY, gameBall.ballRay.originX, gameBall.ballRay.originY - gameBall.ballRay.length);
-
-		//block render loop
-		renderBlocks();
-		for (unsigned int i = 0; i < blocks.size(); i++)
-		{
-			blocks[i].render(mainRender);
-		}
-
-
-		//refresh screen
-		SDL_RenderPresent(mainRender);
+		processInput(gamePaddle, gameBall, e);
+		update(0.0f, gamePaddle, gameBall);
+		render(gamePaddle, gameBall);
 
 		if (blocks.size() <= 1)
 		{
@@ -253,5 +186,95 @@ void Game::gameLoop()
 		}
 	}
 
-	LOG("BYE, Felicia\n"); //program ended
+	delete gamePaddle;
+	delete gameBall;
+	LOG("BYE, Felicia\n");
+}
+
+bool Game::isRunning() const
+{
+	return bisRunning;
+}
+
+void Game::processInput(Paddle* gamePaddle, Ball* gameBall, SDL_Event &e)
+{
+	//user input loop
+	while (SDL_PollEvent(&e) != 0)
+	{
+		//allow program to run until user closes the window
+		if (e.type == SDL_QUIT)
+			bisRunning = false;
+		if ((e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) && gameBall->isMoving == false)
+		{
+			//launch ball on space button press or mousebutton press
+			switch (e.key.keysym.sym)
+			{
+			case SDLK_SPACE:
+				gameBall->launch();
+				printf("Launch ball!\n");
+				break;
+
+			default: break;
+			}
+
+			switch (e.button.state)
+			{
+			case SDL_PRESSED:
+				gameBall->launch();
+				printf("Launch ball!\n");
+				break;
+
+			default: break;
+			}
+		}
+		//currently uses mouse movement or arrows to control paddle
+		gamePaddle->handleEvent(e);
+	}
+}
+
+void Game::update(float deltaTime, Paddle* gamePaddle, Ball* gameBall)
+{
+	for (unsigned int i = 0; i < manager->getGameObjCount(); i++)
+	{
+		manager->getGameObjects()[i]->update(deltaTime);
+	}
+
+	gamePaddle->move();
+	gameBall->move(blocks, gamePaddle);
+}
+
+void Game::render(Paddle* gamePaddle, Ball* gameBall) //void Game::render()
+{
+	SDL_RenderClear(mainRender);
+	//SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 0xff); //black background
+
+	for (unsigned int i = 0; i < manager->getGameObjCount(); i++)
+	{
+		manager->getGameObjects()[i]->render();
+	}
+
+	//render background
+	backgroundTexture.render(0, 0, mainRender);
+
+	//render paddle and ball
+	gamePaddle->render(mainRender);
+	gameBall->render(mainRender);
+
+	//raycast line visualization debugging
+	//SDL_SetRenderDrawColor(mainRender, 255, 255, 255, 0xff);
+	//SDL_RenderDrawLine(mainRender, gameBall->ballRay.originX, gameBall->ballRay.originY, gameBall->ballRay.originX, gameBall->ballRay.originY - gameBall->ballRay.length);
+
+	//TODO: remove this once blocks are refactored into GameObjects
+	for (unsigned int i = 0; i < blocks.size(); i++)
+	{
+		blocks[i].render(mainRender);
+	}
+
+
+	//refresh screen
+	SDL_RenderPresent(mainRender);
+}
+
+void Game::loadLevel(int levelNum)
+{
 }
