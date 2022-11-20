@@ -8,6 +8,7 @@ Game::Game()
 	font = nullptr;
 
 	timer = new LTimer;
+	time = new Time;
 	manager = new GameObjectManager;
 
 	bisRunning = false;
@@ -177,13 +178,8 @@ void Game::gameLoop()
 	while (bisRunning)
 	{
 		processInput(gamePaddle, gameBall, e);
-		update(0.0f, gamePaddle, gameBall);
+		update(gamePaddle, gameBall);
 		render(gamePaddle, gameBall);
-
-		if (blocks.size() <= 1)
-		{
-			spawnBlocks(250, 150, 5, 5);
-		}
 	}
 
 	delete gamePaddle;
@@ -232,11 +228,17 @@ void Game::processInput(Paddle* gamePaddle, Ball* gameBall, SDL_Event &e)
 	}
 }
 
-void Game::update(float deltaTime, Paddle* gamePaddle, Ball* gameBall)
+void Game::update(Paddle* gamePaddle, Ball* gameBall)
 {
+	// handle time every update
+	time->calcAndExecFrameDelay(); // wait for last frame if we need to
+	time->updateDeltaTime();
+	time->clampDeltaTime();
+	time->getLastFrameTicks();
+
 	for (unsigned int i = 0; i < manager->getGameObjCount(); i++)
 	{
-		manager->getGameObjects()[i]->update(deltaTime);
+		manager->getGameObjects()[i]->update(time->getDeltaTime());
 	}
 
 	gamePaddle->move();

@@ -10,6 +10,7 @@
 #include "Constants.h"
 #include "GameObjectManager.h"
 #include "LTimer.h"
+#include "Time.h"
 #include "gameObjects/Block.h"
 #include "gameObjects/Paddle.h"
 #include "gameObjects/Ball.h"
@@ -27,6 +28,7 @@ public:
 	LTexture backgroundTexture; 
 	LTimer* timer;
 	GameObjectManager* manager;
+	Time* time;
 	unsigned int lastFrameTicks;
 
 	// Old variables to be removed /////
@@ -39,8 +41,8 @@ public:
 	bool isRunning() const;
 	//void processInput(); //currently in gameLoop()
 	void processInput(Paddle* gamePaddle, Ball* gameBall, SDL_Event &e);//temp processInput passing in old game classes while refactor is in progress
-	//void update(float deltaTime);
-	void update(float deltaTime, Paddle* gamePaddle, Ball* gameBall); //temp update passing in old game classes while refactor is in progress
+	//void update();
+	void update(Paddle* gamePaddle, Ball* gameBall); //temp update passing in old game classes while refactor is in progress
 	//void render();
 	void render(Paddle* gamePaddle, Ball* gameBall); //temp render passing in old game classes while refactor is in progress
 	void loadLevel(int levelNum);

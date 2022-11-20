@@ -1,5 +1,5 @@
 #pragma once
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
-const int SCREEN_FPS = 60;
-const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
+const unsigned int WINDOW_WIDTH = 800;
+const unsigned int WINDOW_HEIGHT = 600;
+const unsigned int SCREEN_FPS = 60;
+const unsigned int SCREEN_TICKS_PER_FRAME_TARGET = 1000 / SCREEN_FPS;
