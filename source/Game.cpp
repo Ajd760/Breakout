@@ -230,11 +230,12 @@ void Game::processInput(Paddle* gamePaddle, Ball* gameBall, SDL_Event &e)
 
 void Game::update(Paddle* gamePaddle, Ball* gameBall)
 {
-	// handle time every update
+	//// handle time every update ////
 	time->calcAndExecFrameDelay(); // wait for last frame if we need to
 	time->updateDeltaTime();
 	time->clampDeltaTime();
-	time->getLastFrameTicks();
+	time->updateLastFrameTicks();
+	//// done handling time ////
 
 	for (unsigned int i = 0; i < manager->getGameObjCount(); i++)
 	{
