@@ -77,7 +77,7 @@
     <IncludePath>C:\sdl_libs\SDL2-2.24.2\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\sdl_libs\SDL2_mixer-2.6.2\include;C:\sdl_libs\SDL2_ttf-2.20.1\include;C:\sdl_libs\SDL2_image-2.6.2\include;C:\sdl_libs\SDL2-2.24.2\include</IncludePath>
+    <IncludePath>C:\sdl_libs\glm\glm;C:\sdl_libs\SDL2_mixer-2.6.2\include;C:\sdl_libs\SDL2_ttf-2.20.1\include;C:\sdl_libs\SDL2_image-2.6.2\include;C:\sdl_libs\SDL2-2.24.2\include</IncludePath>
     <LibraryPath>C:\sdl_libs\SDL2_mixer-2.6.2\lib\x64;C:\sdl_libs\SDL2_ttf-2.20.1\lib\x64;C:\sdl_libs\SDL2_image-2.6.2\lib\x64;C:\sdl_libs\SDL2-2.24.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
