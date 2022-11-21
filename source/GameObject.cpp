@@ -16,17 +16,23 @@ GameObject::~GameObject()
 
 void GameObject::update(float deltaTime)
 {
-	for (int i = 0; i < components.size(); i++)
+	if (bisActive)
 	{
-		components[i]->update(deltaTime);
+		for (int i = 0; i < components.size(); i++)
+		{
+			components[i]->update(deltaTime);
+		}
 	}
 }
 
 void GameObject::render()
 {
-	for (int i = 0; i < components.size(); i++)
+	if (bisActive)
 	{
-		components[i]->render();
+		for (int i = 0; i < components.size(); i++)
+		{
+			components[i]->render();
+		}
 	}
 }
 

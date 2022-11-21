@@ -149,6 +149,7 @@
     <ClCompile Include="source\math\Vector2.cpp" />
     <ClCompile Include="source\SoundPlayer.cpp" />
     <ClCompile Include="source\Time.cpp" />
+    <ClCompile Include="source\components\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Constants.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="source\gameObjects\Paddle.h" />
     <ClInclude Include="source\SoundPlayer.h" />
     <ClInclude Include="source\Time.h" />
+    <ClInclude Include="source\components\TransformComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
