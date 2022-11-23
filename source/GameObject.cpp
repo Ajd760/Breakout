@@ -49,7 +49,7 @@ bool GameObject::getIsActive() const
 
 int GameObject::getNumComponents() const
 {
-	return components.size();
+	return (int)components.size();
 }
 
 Component* GameObject::getComponentByIndex(int index) const
@@ -60,4 +60,17 @@ Component* GameObject::getComponentByIndex(int index) const
 		return nullptr;
 	}
 	return components[index];
+}
+
+glm::vec2 GameObject::getTransformPosition() const
+{
+	//glm::vec2 position;
+	for (auto& component : components)
+	{
+		if (component->getType() == "TransformComponent")
+			//position = component->getTransformPosition();
+			break; //TODO fix
+	}
+	//glm::vec2 position = getComponentByType("TransformComponent")->getTransformPosition();
+	return glm::vec2();
 }
