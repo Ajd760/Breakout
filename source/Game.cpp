@@ -1,10 +1,13 @@
 #include "Game.h"
+#include "components/TransformComponent.h"
+
+SDL_Renderer* Game::mainRender;
 
 Game::Game()
 {
 	gameWindow = nullptr;
 	windowSurface = nullptr;
-	mainRender = nullptr;
+	Game::mainRender = nullptr;
 	font = nullptr;
 
 	timer = new LTimer;
@@ -12,7 +15,6 @@ Game::Game()
 	manager = new GameObjectManager;
 
 	bisRunning = false;
-	lastFrameTicks = 0;
 }
 
 Game::~Game()
@@ -23,7 +25,7 @@ Game::~Game()
 
 	gameWindow = nullptr;
 	windowSurface = nullptr;
-	mainRender = nullptr;
+	Game::mainRender = nullptr;
 	font = nullptr;
 
 	delete timer;
@@ -54,15 +56,15 @@ bool Game::init()
 		}
 		else //get renderer
 		{
-			mainRender = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-			if (mainRender == NULL)
+			Game::mainRender = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+			if (Game::mainRender == NULL)
 			{
 				LOG("Failed to init Renderer! SDL_Error: %s\n", SDL_GetError());
 				success = false;
 			}
 			else //set render draw color default and init PNG image loading
 			{
-				SDL_SetRenderDrawColor(mainRender, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(Game::mainRender, 0xFF, 0xFF, 0xFF, 0xFF);
 
 				int imgFlags = IMG_INIT_PNG;
 				if (!(IMG_Init(imgFlags) & imgFlags))
@@ -106,7 +108,7 @@ bool Game::init()
 void Game::close()
 {
 	SDL_FreeSurface(windowSurface);
-	SDL_DestroyRenderer(mainRender);
+	SDL_DestroyRenderer(Game::mainRender);
 	SDL_DestroyWindow(gameWindow);
 	TTF_CloseFont(font);
 
@@ -142,15 +144,15 @@ void Game::spawnBlocks(int x, int y, int width, int height)
 
 	for (unsigned int i = 0; i < blocks.size(); i++)
 	{
-		blocks[i].loadTexture("red_block.png", mainRender);
+		blocks[i].loadTexture("red_block.png", Game::mainRender);
 	}
 
 }
 
 void Game::loadAllTextures(Ball* ball, Paddle* paddle)
 {
-	ball->loadTexture("ball.png", mainRender);
-	paddle->loadTexture("space_paddle90px.png", mainRender);
+	ball->loadTexture("ball.png", Game::mainRender);
+	paddle->loadTexture("space_paddle90px.png", Game::mainRender);
 }
 
 void Game::gameLoop()
@@ -168,11 +170,13 @@ void Game::gameLoop()
 	loadAllTextures(gameBall, gamePaddle); //load all textures for objects
 
 	//load background texture
-	if (!(backgroundTexture.loadFromFile("background.png", mainRender)))
+	if (!(backgroundTexture.loadFromFile("background.png", Game::mainRender)))
 	{
 		LOG("Failed to load background texture... Aborting startup\n");
 		bisRunning = false;
 	}
+
+	loadLevel(0);
 
 	//main game loop
 	while (bisRunning)
@@ -237,10 +241,7 @@ void Game::update(Paddle* gamePaddle, Ball* gameBall)
 	time->updateLastFrameTicks();
 	//// done handling time ////
 
-	for (unsigned int i = 0; i < manager->getGameObjCount(); i++)
-	{
-		manager->getGameObjects()[i]->update(time->getDeltaTime());
-	}
+	manager->update(time->getDeltaTime());
 
 	gamePaddle->move();
 	gameBall->move(blocks, gamePaddle);
@@ -248,36 +249,37 @@ void Game::update(Paddle* gamePaddle, Ball* gameBall)
 
 void Game::render(Paddle* gamePaddle, Ball* gameBall) //void Game::render()
 {
-	SDL_RenderClear(mainRender);
-	//SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 0xff); //black background
+	//SDL_SetRenderDrawColor(Game::mainRender, 0, 0, 0, 0xff); //black background
+	SDL_RenderClear(Game::mainRender);
 
-	for (unsigned int i = 0; i < manager->getGameObjCount(); i++)
-	{
-		manager->getGameObjects()[i]->render();
-	}
+	//TODO: remove this once refactored into GameObject
+	backgroundTexture.render(0, 0, Game::mainRender);
 
-	//render background
-	backgroundTexture.render(0, 0, mainRender);
+	//TODO: return early if manager is empty?
+	manager->render();
 
-	//render paddle and ball
-	gamePaddle->render(mainRender);
-	gameBall->render(mainRender);
+
+	////TODO: remove this once refactored into GameObjects
+	gamePaddle->render(Game::mainRender);
+	gameBall->render(Game::mainRender);
 
 	//raycast line visualization debugging
-	//SDL_SetRenderDrawColor(mainRender, 255, 255, 255, 0xff);
-	//SDL_RenderDrawLine(mainRender, gameBall->ballRay.originX, gameBall->ballRay.originY, gameBall->ballRay.originX, gameBall->ballRay.originY - gameBall->ballRay.length);
+	//SDL_SetRenderDrawColor(Game::mainRender, 255, 255, 255, 0xff);
+	//SDL_RenderDrawLine(Game::mainRender, gameBall->ballRay.originX, gameBall->ballRay.originY, gameBall->ballRay.originX, gameBall->ballRay.originY - gameBall->ballRay.length);
 
 	//TODO: remove this once blocks are refactored into GameObjects
 	for (unsigned int i = 0; i < blocks.size(); i++)
 	{
-		blocks[i].render(mainRender);
+		blocks[i].render(Game::mainRender);
 	}
 
 
 	//refresh screen
-	SDL_RenderPresent(mainRender);
+	SDL_RenderPresent(Game::mainRender);
 }
 
 void Game::loadLevel(int levelNum)
 {
+	GameObject& testDot(manager->addGameObject("testDot"));
+	testDot.addComponent<TransformComponent>(0.0f, 0.0f, 20.0f, 20.0f, 32, 32, 1.0f);
 }

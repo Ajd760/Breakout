@@ -18,19 +18,15 @@
 
 #define LOG printf
 
-// moved to Constants.h
-//const int SCREEN_FPS = 60;
-//const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
-
 class Game
 {
 public:
+	static SDL_Renderer* Game::mainRender; //declare this in the cpp file
 	TTF_Font* font;
 	LTexture backgroundTexture; 
 	LTimer* timer;
 	GameObjectManager* manager;
 	Time* time;
-	unsigned int lastFrameTicks;
 
 	// Old variables to be removed /////
 	std::vector<Block> blocks; //vector of blocks - TODO: convert to gameObjects
@@ -56,7 +52,7 @@ public:
 	//////////////////////////////////////////////////
 
 private:
-	SDL_Renderer* mainRender;
+	//SDL_Renderer* Game::mainRender; //made a public static
 	SDL_Surface* windowSurface;
 	SDL_Window* gameWindow;
 	bool bisRunning;
