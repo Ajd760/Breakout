@@ -9,10 +9,9 @@
 //const int WINDOW_HEIGHT = 600;
 
 //Texture wrapper class
+//TODO: remove this class or convert into the Text manager class
 class LTexture
 {
-	friend class Dot; //allow Dot class access to rendering functionality
-
 public:
 	//constructor - sets defaults
 	LTexture();
