@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\AssetManager.cpp" />
     <ClCompile Include="source\GameObjectManager.cpp" />
     <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\gameObjects\Ball.cpp" />
@@ -150,8 +151,10 @@
     <ClCompile Include="source\SoundPlayer.cpp" />
     <ClCompile Include="source\Time.cpp" />
     <ClCompile Include="source\components\TransformComponent.cpp" />
+    <ClCompile Include="source\components\SpriteComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\AssetManager.h" />
     <ClInclude Include="source\Constants.h" />
     <ClInclude Include="source\GameObjectManager.h" />
     <ClInclude Include="source\GameObject.h" />
@@ -168,6 +171,7 @@
     <ClInclude Include="source\SoundPlayer.h" />
     <ClInclude Include="source\Time.h" />
     <ClInclude Include="source\components\TransformComponent.h" />
+    <ClInclude Include="source\components\SpriteComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
