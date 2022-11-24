@@ -74,3 +74,11 @@ glm::vec2 GameObject::getTransformPosition() const
 	//glm::vec2 position = getComponentByType("TransformComponent")->getTransformPosition();
 	return glm::vec2();
 }
+
+void GameObject::listComponents() const
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		std::cout << "\t" << components[i]->getType() << std::endl;
+	}
+}

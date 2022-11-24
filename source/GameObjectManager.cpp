@@ -23,7 +23,7 @@ bool GameObjectManager::isEmpty() const
 
 unsigned int GameObjectManager::getGameObjCount() const
 {
-	return gameObjects.size();
+	return (unsigned int)gameObjects.size();
 }
 
 void GameObjectManager::destroyEverything()
@@ -44,6 +44,7 @@ void GameObjectManager::listGameObjects() const
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		std::cout << gameObjects[i]->name << std::endl;
+		gameObjects[i]->listComponents();
 	}
 }
 

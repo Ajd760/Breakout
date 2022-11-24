@@ -24,6 +24,7 @@ public:
 	int getNumComponents() const;
 	Component* getComponentByIndex(int index) const;
 	glm::vec2 getTransformPosition() const;
+	void listComponents() const;
 
 	// create and add a component to the gameObject, and return a reference to the component
 	template <typename T, typename... TArgs>
@@ -37,16 +38,17 @@ public:
 		return *newComponent;
 	}
 
-#if true //compiler directive to turn on/off for debugging
 	//TODO: test this more thoroughly or rewrite it
 	// Component Types:
 	//- TransformComponent
 	//- SpriteComponent
 	template <typename T>
-	T* getComponentByType(std::string componentType)
+	T* getComponentByType()
 	{
 		// try using the map added to the base class that keeps track of typeids
-		return static_cast<T*>(componentToTypeMap[&typeid(T)]);
+		// this would be called like gameObject->getComponentByType<TransformComponent>() similar to unity. Ok like identical to unity
+		return static_cast<T*>(componentToTypeMap.at(&typeid(T)));
+
 		/* below has not been working, leaving in here in case i come back to it
 		for (T* component : components)
 		{
@@ -56,7 +58,6 @@ public:
 		return nullptr;
 		*/
 	}
-#endif
 
 protected:
 	GameObjectManager& manager;
