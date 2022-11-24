@@ -38,7 +38,7 @@ bool SoundPlayer::loadSounds()
 
 	if (ballHitPaddle == NULL || ballHitBlock1 == NULL || ballHitBlock2 == NULL || ballLaunch == NULL)
 	{
-		printf("Problem loading a sound! Mix_Error: %s", Mix_GetError());
+		printf("Problem loading a sound! Mix_Error: %s\n", Mix_GetError());
 		success = false;
 	}
 
