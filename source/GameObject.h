@@ -1,6 +1,7 @@
 #pragma once
 #include <glm.hpp>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -31,6 +32,7 @@ public:
 		T* newComponent(new T(std::forward<TArgs>(args)...));
 		newComponent->owner = this;
 		components.emplace_back(newComponent);
+		componentToTypeMap[&typeid(*newComponent)] = newComponent; //add the component to the type map to track it for a component getter
 		newComponent->init();
 		return *newComponent;
 	}
@@ -43,12 +45,16 @@ public:
 	template <typename T>
 	T* getComponentByType(std::string componentType)
 	{
+		// try using the map added to the base class that keeps track of typeids
+		return static_cast<T*>(componentToTypeMap[&typeid(T)]);
+		/* below has not been working, leaving in here in case i come back to it
 		for (T* component : components)
 		{
 			if (component->getType() == componentType)
 				return component;
 		}
 		return nullptr;
+		*/
 	}
 #endif
 
@@ -56,4 +62,5 @@ protected:
 	GameObjectManager& manager;
 	bool bisActive;
 	std::vector<Component*> components;
+	std::map<const std::type_info*, Component*> componentToTypeMap; //keeps track of each type of component added to the gameObject
 };
