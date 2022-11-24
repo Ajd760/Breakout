@@ -1,7 +1,15 @@
 #include "Game.h"
 #include "components/TransformComponent.h"
+#include "components/SpriteComponent.h"
 
+GameObjectManager manager;
 SDL_Renderer* Game::mainRender;
+AssetManager* Game::assManager = new AssetManager(&manager);
+
+//making these global until they are refactored into gameObjects
+bool paddleCollidersAuto = false; //if set to true, this sets all paddle colliders to the same width
+Paddle* gamePaddle = new Paddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, paddleCollidersAuto, 10); //spawn paddle at the center middle of screen
+Ball* gameBall = new Ball();
 
 Game::Game()
 {
@@ -12,7 +20,6 @@ Game::Game()
 
 	timer = new LTimer;
 	time = new Time;
-	manager = new GameObjectManager;
 
 	bisRunning = false;
 }
@@ -21,7 +28,7 @@ Game::~Game()
 {
 	close();
 
-	manager->destroyEverything();
+	manager.destroyEverything();
 
 	gameWindow = nullptr;
 	windowSurface = nullptr;
@@ -29,7 +36,6 @@ Game::~Game()
 	font = nullptr;
 
 	delete timer;
-	delete manager;
 }
 
 //Initializes SDL subsystems. Currently Initializing:
@@ -100,6 +106,7 @@ bool Game::init()
 			}
 		}
 	}
+	gameBall->soundPlayer.loadSounds(); //temp init this after SDL is init'd since ball is temporarily a global
 	bisRunning = true;
 	return success;
 }
@@ -159,16 +166,6 @@ void Game::gameLoop()
 {
 	SDL_Event e; //event handler
 
-	//Pregame object spawning
-	bool paddleCollidersAuto = false; //if set to true, this sets all paddle colliders to the same width
-	Paddle* gamePaddle = new Paddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, paddleCollidersAuto, 10); //spawn paddle at the center middle of screen
-	Ball* gameBall = new Ball();
-	gameBall->reset(gamePaddle); //immediately reset ball back to paddle after spawn
-	spawnBlocks(250, 200, 7, 7); //setting a 5x5 stack of blocks
-
-	//pregame object texture loading
-	loadAllTextures(gameBall, gamePaddle); //load all textures for objects
-
 	//load background texture
 	if (!(backgroundTexture.loadFromFile("background.png", Game::mainRender)))
 	{
@@ -176,7 +173,11 @@ void Game::gameLoop()
 		bisRunning = false;
 	}
 
-	loadLevel(0);
+	loadLevel(0); // load legacy level
+	loadLevel(1); // load new level with gameObjects
+
+
+	manager.listGameObjects();
 
 	//main game loop
 	while (bisRunning)
@@ -241,7 +242,7 @@ void Game::update(Paddle* gamePaddle, Ball* gameBall)
 	time->updateLastFrameTicks();
 	//// done handling time ////
 
-	manager->update(time->getDeltaTime());
+	manager.update(time->getDeltaTime());
 
 	gamePaddle->move();
 	gameBall->move(blocks, gamePaddle);
@@ -256,7 +257,7 @@ void Game::render(Paddle* gamePaddle, Ball* gameBall) //void Game::render()
 	backgroundTexture.render(0, 0, Game::mainRender);
 
 	//TODO: return early if manager is empty?
-	manager->render();
+	manager.render();
 
 
 	////TODO: remove this once refactored into GameObjects
@@ -280,6 +281,28 @@ void Game::render(Paddle* gamePaddle, Ball* gameBall) //void Game::render()
 
 void Game::loadLevel(int levelNum)
 {
-	GameObject& testDot(manager->addGameObject("testDot"));
-	testDot.addComponent<TransformComponent>(0.0f, 0.0f, 20.0f, 20.0f, 32, 32, 1.0f);
+	switch (levelNum)
+	{
+		case 0:
+		{
+			gameBall->reset(gamePaddle); //immediately reset ball back to paddle after spawn
+			spawnBlocks(250, 200, 7, 7); //setting a 5x5 stack of blocks
+
+			//pregame object texture loading
+			loadAllTextures(gameBall, gamePaddle); //load all textures for objects
+			break;
+		}
+		case 1:
+		{
+			assManager->addTexture("skeleton-3", "./assets/skeleton-3.png");
+			GameObject& testDot(manager.addGameObject("testDot"));
+			testDot.addComponent<TransformComponent>(0.0f, 0.0f, 20.0f, 20.0f, 250, 250, 1.0f);
+			testDot.addComponent<SpriteComponent>("skeleton-3");
+			break;
+		}
+		default: 
+			break;
+
+	}
+
 }

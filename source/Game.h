@@ -8,6 +8,7 @@
 #include <SDL_mixer.h>
 #include <glm.hpp>
 
+#include "AssetManager.h"
 #include "Constants.h"
 #include "GameObjectManager.h"
 #include "LTimer.h"
@@ -21,11 +22,12 @@
 class Game
 {
 public:
-	static SDL_Renderer* Game::mainRender; //declare this in the cpp file
+	static SDL_Renderer* Game::mainRender; // declare this in the cpp file
+	static AssetManager* Game::assManager; // ha ha
 	TTF_Font* font;
 	LTexture backgroundTexture; 
 	LTimer* timer;
-	GameObjectManager* manager;
+	//GameObjectManager* manager; // just declare this in the Game.cpp and use it (may need more than 1 and there is no reason for it be a member here)
 	Time* time;
 
 	// Old variables to be removed /////
@@ -52,7 +54,6 @@ public:
 	//////////////////////////////////////////////////
 
 private:
-	//SDL_Renderer* Game::mainRender; //made a public static
 	SDL_Surface* windowSurface;
 	SDL_Window* gameWindow;
 	bool bisRunning;
