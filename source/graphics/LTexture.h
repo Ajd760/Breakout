@@ -4,12 +4,7 @@
 #include <SDL_ttf.h>
 #include <string>
 
-// moved to Constants.h
-//const int WINDOW_WIDTH = 800;
-//const int WINDOW_HEIGHT = 600;
-
 //Texture wrapper class
-//TODO: remove this class or convert into the Text manager class
 class LTexture
 {
 public:
@@ -17,6 +12,12 @@ public:
 	LTexture();
 	//destructor - calls free() to deallocate texture
 	~LTexture();
+
+	// Statics for use with new GameObject/Component system
+	// load and return pointer to a texture
+	static SDL_Texture* loadTextureFromFile(std::string path, SDL_Renderer* ren);
+	// this will differ from render() in that it takes a source rect, plus i think draw is the more proper thing to call it not render (we are drawing the texture to be rendered)
+	static void draw(SDL_Renderer* rend, SDL_Texture* tex, SDL_Rect* srcRect, SDL_Rect* dstRect, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 	//loads png at path
 	bool loadFromFile(std::string path, SDL_Renderer* cRenderer);

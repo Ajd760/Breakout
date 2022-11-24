@@ -51,6 +51,28 @@ bool LTexture::loadFromFile(std::string path, SDL_Renderer* cRenderer)
 	return mTexture != NULL; //returns 1 (true) if texture is not null
 }
 
+SDL_Texture* LTexture::loadTextureFromFile(std::string path, SDL_Renderer* ren)
+{
+	SDL_Surface* surf = IMG_Load(path.c_str());
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(ren, surf);
+	if (surf == NULL || tex == NULL)
+	{
+		printf("Could not load image %s!\nIMG Error: %s\nSDL Error : %s\n", path.c_str(), IMG_GetError(), SDL_GetError());
+		SDL_FreeSurface(surf);
+		return nullptr;
+	}
+	else
+	{
+		SDL_FreeSurface(surf);
+		return tex;
+	}
+}
+
+void LTexture::draw(SDL_Renderer* rend, SDL_Texture* tex, SDL_Rect* srcRect, SDL_Rect* dstRect, double angle, SDL_Point* center, SDL_RendererFlip flip)
+{
+	SDL_RenderCopyEx(rend, tex, srcRect, dstRect, angle, center, flip);
+}
+
 bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor, SDL_Renderer* cRenderer, TTF_Font* cFont)
 {
 	free(); //get rid of any preexisting texture
