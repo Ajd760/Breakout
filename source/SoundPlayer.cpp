@@ -26,6 +26,16 @@ bool SoundPlayer::loadSounds()
 	ballHitBlock1 = Mix_LoadWAV("Sounds/iceball.wav");
 	ballHitBlock2 = Mix_LoadWAV("Sounds/slimeball.wav");
 
+	//query and set chunk volumes - TODO: make something that does this and expose it via a static or something for global volume control
+	int volume = Mix_VolumeChunk(ballLaunch, -1); // -1 to query current volumet
+	Mix_VolumeChunk(ballLaunch, (int)(volume*.2)); //set volume to 20% of the default (cuz it's loud af by default
+	volume = Mix_VolumeChunk(ballHitPaddle, -1);
+	Mix_VolumeChunk(ballHitPaddle, (int)(volume * .2)); 
+	volume = Mix_VolumeChunk(ballHitBlock1, -1); 
+	Mix_VolumeChunk(ballHitBlock1, (int)(volume * .2)); 
+	volume = Mix_VolumeChunk(ballHitBlock2, -1); 
+	Mix_VolumeChunk(ballHitBlock2, (int)(volume * .2));
+
 	if (ballHitPaddle == NULL || ballHitBlock1 == NULL || ballHitBlock2 == NULL || ballLaunch == NULL)
 	{
 		printf("Problem loading a sound! Mix_Error: %s", Mix_GetError());
