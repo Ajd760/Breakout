@@ -27,12 +27,14 @@ void TransformComponent::update(float deltaTime)
 
 void TransformComponent::render()
 {
-	// this can probably be removed at some point, only rendering for the transform for debugging?
+	// only rendering for the transform for debugging , maybe TODO: add a flag to enable/disable this
+	/*
 	SDL_Rect transformRect = {
 	(int)position.x, (int)position.y, width, height
 	};
 	SDL_SetRenderDrawColor(Game::mainRender, 255, 255, 255, 255);
 	SDL_RenderFillRect(Game::mainRender, &transformRect);
+	*/
 }
 
 void TransformComponent::render(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
